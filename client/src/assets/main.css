@@ -1,0 +1,48 @@
+/* FILE: client/src/assets/main.css */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  /* BẢNG MÀU LUXURY ĐỒNG BỘ */
+  --primary: #d4af37; /* Vàng Gold */
+  --primary-hover: #b5952f;
+  --dark: #0f172a; /* Xanh Đen Đậm */
+  --dark-light: #1e293b; /* Xanh Đen Nhạt */
+  --light: #f8fafc; /* Nền sáng */
+  --white: #ffffff;
+  --gray: #64748b;
+
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background-color: var(--light);
+  color: var(--dark);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  color: var(--dark);
+}
+
+/* Scrollbar đẹp hơn */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

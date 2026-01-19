@@ -1,0 +1,18 @@
+# --- CÁC THƯ VIỆN & FILE RÁC HỆ THỐNG ---
+node_modules/
+**/node_modules/
+dist/
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# --- CÁC FILE CHỨA MẬT KHẨU & CẤU HÌNH NHẠY CẢM ---
+.env
+server/.env
+client/.env
+
+# --- CÁC FILE ẨN ---
+cap_nhat_github.bat
+khoi_dong_app.bat
+github_repo.txt
