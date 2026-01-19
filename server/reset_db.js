@@ -14,50 +14,52 @@ const db = mysql.createConnection({
 db.connect();
 
 const sqlCmds = [
-  // 1. Tạo bảng Users (Admin) nếu chưa có
+  // 1. Tạo bảng Users (Admin/BQL) - Có cột email
   `CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         username VARCHAR(50) NOT NULL UNIQUE,
         password VARCHAR(100) NOT NULL,
         full_name VARCHAR(100),
+        email VARCHAR(100),
         role ENUM('admin', 'manager') DEFAULT 'manager'
     )`,
 
-  // 2. Tạo bảng Residents (Cư dân) nếu chưa có
+  // 2. Tạo bảng Residents (Cư dân) - THÊM CỘT EMAIL
   `CREATE TABLE IF NOT EXISTS residents (
         id INT AUTO_INCREMENT PRIMARY KEY,
         username VARCHAR(50) NOT NULL UNIQUE,
         password VARCHAR(100) NOT NULL,
         full_name VARCHAR(100) NOT NULL,
+        email VARCHAR(100),
         phone VARCHAR(20),
         apartment_id INT,
         is_owner BOOLEAN DEFAULT FALSE
     )`,
 
-  // 3. Xóa dữ liệu cũ của AD1 và DC1 để tránh lỗi trùng lặp
+  // 3. Xóa dữ liệu cũ
   "DELETE FROM users WHERE username IN ('AD1')",
   "DELETE FROM residents WHERE username IN ('DC1')",
 
-  // 4. Thêm lại Admin (AD1)
-  `INSERT INTO users (username, password, full_name, role) VALUES 
-    ('AD1', '123456', 'Super Admin', 'admin')`,
+  // 4. Nạp Admin mẫu (Thay email của bạn để test)
+  `INSERT INTO users (username, password, full_name, email, role) VALUES 
+    ('AD1', '123456', 'Super Admin', 'admin@gmail.com', 'admin')`,
 
-  // 5. Thêm lại Cư dân (DC1) - Đây là tài khoản bạn đang thử đăng nhập
-  `INSERT INTO residents (username, password, full_name, phone, is_owner) VALUES 
-    ('DC1', '123456', 'Nguyễn Văn A', '0909999999', TRUE)`,
+  // 5. Nạp Cư dân mẫu (DC1) - CÓ EMAIL (Thay email của bạn để test)
+  `INSERT INTO residents (username, password, full_name, email, phone, is_owner) VALUES 
+    ('DC1', '123456', 'Nguyễn Văn A', 'cudan@gmail.com', '0988888888', TRUE)`,
 ];
 
-console.log('⏳ Đang nạp dữ liệu tài khoản...');
+console.log('⏳ Đang cập nhật cấu trúc bảng và dữ liệu...');
 
 let count = 0;
 sqlCmds.forEach((query) => {
   db.query(query, (err) => {
     if (err) console.error('❌ Lỗi SQL:', err.message);
-    else console.log('✅ Thực thi OK.');
+    else console.log('✅ Xong bước ' + (count + 1));
 
     count++;
     if (count === sqlCmds.length) {
-      console.log('🎉 XONG! Dữ liệu người dùng đã sẵn sàng.');
+      console.log('🎉 ĐÃ XONG! Database đã có Email.');
       db.end();
     }
   });

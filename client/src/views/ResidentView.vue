@@ -14,17 +14,18 @@ const user = ref(JSON.parse(localStorage.getItem('user_info') || '{}'));
 const searchQuery = ref('');
 const showPass = ref({});
 
-// CẬP NHẬT FORM: Giữ nguyên các trường cũ
+// CẬP NHẬT FORM: Thêm trường email
 const form = ref({
   full_name: '',
   username: '',
   phone: '',
+  email: '', // <--- Thêm trường này
   apartment_id: '',
   is_owner: 0,
   password: '',
 });
 
-// --- LOGIC FETCH DATA (Giữ nguyên) ---
+// --- LOGIC FETCH DATA ---
 const fetchData = async () => {
   try {
     const [resRes, resApt] = await Promise.all([
@@ -46,7 +47,7 @@ const formatAptStatus = (status) => {
   return map[status] || '---';
 };
 
-// --- LOGIC LỌC (Giữ nguyên) ---
+// --- LOGIC LỌC ---
 const filteredResidents = computed(() => {
   if (!searchQuery.value) return residents.value;
   const lower = searchQuery.value.toLowerCase();
@@ -54,18 +55,23 @@ const filteredResidents = computed(() => {
     (r) =>
       r.full_name.toLowerCase().includes(lower) ||
       (r.username && r.username.toLowerCase().includes(lower)) ||
+      (r.email && r.email.toLowerCase().includes(lower)) || // Tìm theo email
       (r.apartment_code && r.apartment_code.toLowerCase().includes(lower)) ||
       (r.phone && r.phone.includes(lower)),
   );
 });
 
-// --- LOGIC MODAL (Giữ nguyên) ---
+// --- LOGIC MODAL ---
 const openAdd = () => {
   isEditing.value = false;
+  // Tạo mã ngẫu nhiên cho tiện (DC + số)
+  const randomCode = 'DC' + Math.floor(Math.random() * 9000 + 1000);
+
   form.value = {
     full_name: '',
-    username: '',
+    username: randomCode,
     phone: '',
+    email: '', // Reset email
     apartment_id: '',
     is_owner: 0,
     password: '',
@@ -76,6 +82,7 @@ const openAdd = () => {
 const openEdit = (r) => {
   isEditing.value = true;
   currentId.value = r.id;
+  // Map dữ liệu vào form
   form.value = { ...r, password: r.password || '' };
   showModal.value = true;
 };
@@ -93,6 +100,7 @@ const handleSave = async () => {
 
     showModal.value = false;
     fetchData();
+    alert('Lưu dữ liệu thành công!');
   } catch (e) {
     alert(e.response?.data?.message || 'Lỗi lưu dữ liệu');
   }
@@ -176,7 +184,7 @@ onMounted(() => {
             <span class="search-icon">🔍</span>
             <input
               v-model="searchQuery"
-              placeholder="Tìm Mã DC, Phòng, Tên..."
+              placeholder="Tìm Mã DC, Phòng, Tên, Email..."
             />
           </div>
           <button @click="openAdd" class="btn-primary">+ Thêm Cư Dân</button>
@@ -189,9 +197,9 @@ onMounted(() => {
             <tr>
               <th>Họ tên</th>
               <th>User (Mã)</th>
+              <th>Email</th>
               <th>Mật khẩu</th>
               <th>Căn hộ</th>
-              <th>Trạng thái Phòng</th>
               <th>SĐT</th>
               <th>Vai trò</th>
               <th style="text-align: right">Hành động</th>
@@ -211,6 +219,9 @@ onMounted(() => {
               >
                 {{ r.username }}
               </td>
+              <td style="color: #64748b; font-size: 13px">
+                {{ r.email || '---' }}
+              </td>
               <td>
                 <div class="pass-cell">
                   <span>{{ showPass[r.id] ? r.password : '••••••' }}</span>
@@ -227,11 +238,6 @@ onMounted(() => {
                 <span class="badge code-badge">{{
                   r.apartment_code || '---'
                 }}</span>
-              </td>
-              <td>
-                <span :class="['badge', r.apartment_status]">
-                  {{ formatAptStatus(r.apartment_status) }}
-                </span>
               </td>
               <td style="font-family: monospace">{{ r.phone }}</td>
               <td>
@@ -284,13 +290,22 @@ onMounted(() => {
             <input
               v-model="form.username"
               placeholder="VD: DC1, DC2..."
-              :disabled="isEditing && false"
+              :disabled="isEditing"
             />
           </div>
 
           <div class="form-group">
             <label>Họ và tên</label>
             <input v-model="form.full_name" placeholder="VD: Nguyễn Văn A" />
+          </div>
+
+          <div class="form-group">
+            <label>Email (Nhận mã OTP/Mật khẩu)</label>
+            <input
+              v-model="form.email"
+              type="email"
+              placeholder="VD: abc@gmail.com"
+            />
           </div>
 
           <div class="form-group">
@@ -572,23 +587,6 @@ onMounted(() => {
   color: #ea580c;
   font-weight: 700;
 } /* Mã căn hộ - Cam nhạt */
-
-.badge.chua_ban {
-  background: #f1f5f9;
-  color: #64748b;
-}
-.badge.da_ban {
-  background: #dbeafe;
-  color: #2563eb;
-}
-.badge.dat_coc {
-  background: #fef9c3;
-  color: #ca8a04;
-}
-.badge.cho_thue {
-  background: #e0e7ff;
-  color: #4338ca;
-}
 
 .pass-cell {
   display: flex;

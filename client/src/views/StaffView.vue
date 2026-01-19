@@ -2,8 +2,8 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
-// Import Component Thông báo
-import NotificationToast from '../components/NotificationToast.vue';
+// Import Component Thông báo nếu có
+// import NotificationToast from '../components/NotificationToast.vue';
 
 const router = useRouter();
 const users = ref([]);
@@ -12,11 +12,13 @@ const isEditing = ref(false);
 const currentId = ref(null);
 const user = ref(JSON.parse(localStorage.getItem('user_info') || '{}'));
 
+// CẬP NHẬT FORM: Thêm trường email
 const form = ref({
   username: '',
   password: '',
   full_name: '',
-  role: 'manager', // Mặc định là Quản lý
+  email: '', // <--- Thêm trường này
+  role: 'manager',
 });
 
 // --- LOGIC FETCH DATA ---
@@ -40,7 +42,13 @@ const openEdit = (u) => {
 
 const openAdd = () => {
   isEditing.value = false;
-  form.value = { username: '', password: '', full_name: '', role: 'manager' };
+  form.value = {
+    username: '',
+    password: '',
+    full_name: '',
+    email: '',
+    role: 'manager',
+  };
   showModal.value = true;
 };
 
@@ -91,15 +99,11 @@ const roleName = (r) =>
   r === 'admin' ? 'Quản trị viên (Super)' : 'Quản lý (Manager)';
 
 onMounted(() => {
-  // 1. Kiểm tra đăng nhập
   if (!user.value.username) return router.push('/login');
-
-  // 2. Bảo mật: Chỉ Admin mới được vào trang này
   if (user.value.role !== 'admin') {
     alert('Bạn không có quyền truy cập trang Nhân sự!');
     return router.push('/dashboard');
   }
-
   fetchUsers();
 });
 </script>
@@ -157,8 +161,6 @@ onMounted(() => {
         </div>
 
         <div class="header-actions">
-          <NotificationToast role="user" :userId="user.id" />
-
           <button @click="openAdd" class="btn-primary">+ Thêm Nhân Viên</button>
         </div>
       </header>
@@ -169,6 +171,7 @@ onMounted(() => {
             <tr>
               <th>Tài khoản</th>
               <th>Họ và tên</th>
+              <th>Email</th>
               <th>Vai trò</th>
               <th style="text-align: right">Hành động</th>
             </tr>
@@ -177,6 +180,9 @@ onMounted(() => {
             <tr v-for="u in users" :key="u.id">
               <td class="code">{{ u.username }}</td>
               <td style="font-weight: 500">{{ u.full_name }}</td>
+              <td style="color: #64748b; font-size: 13px">
+                {{ u.email || '---' }}
+              </td>
               <td>
                 <span :class="['badge', u.role]">{{ roleName(u.role) }}</span>
               </td>
@@ -225,6 +231,15 @@ onMounted(() => {
           <div class="form-group">
             <label>Họ và tên</label>
             <input v-model="form.full_name" placeholder="VD: Nguyễn Văn A" />
+          </div>
+
+          <div class="form-group">
+            <label>Email (Để nhận mật khẩu khi quên)</label>
+            <input
+              v-model="form.email"
+              type="email"
+              placeholder="VD: abc@gmail.com"
+            />
           </div>
 
           <div class="form-group">
