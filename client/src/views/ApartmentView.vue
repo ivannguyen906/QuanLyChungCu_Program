@@ -41,18 +41,20 @@ const fetchData = async () => {
 };
 
 const formatMoney = (n) => {
-  if (n === undefined || n === null || n === 0) return 'Liên hệ';
-  return Number(n).toLocaleString('vi-VN') + ' đ';
+  // Nếu n là undefined, null hoặc 0, có thể do tên biến truyền vào bị sai (ví dụ n.price thay vì n.rental_price)
+  if (n === undefined || n === null || n === 0) return 'Chưa cập nhật';
+
+  return Number(n).toLocaleString('vi-VN') + ' đ / tháng';
 };
 
 const formatStatus = (status) => {
   const map = {
-    chua_ban: 'Còn trống',
+    con_trong: 'Còn trống',
     dat_coc: 'Đã đặt cọc',
-    da_ban: 'Đã bán',
     cho_thue: 'Đang cho thuê',
+    chua_ban: 'Còn trống',
   };
-  return map[status] || status;
+  return map[status] || 'Không xác định';
 };
 
 // --- LOGIC GỢI Ý CHỦ HỘ ---
@@ -263,7 +265,7 @@ onMounted(() => {
               <td class="code">{{ apt.apartment_code }}</td>
               <td style="color: #64748b">{{ apt.area }} m²</td>
               <td style="font-weight: 600; color: var(--dark)">
-                {{ formatMoney(apt.price) }}
+                {{ formatMoney(apt.rental_price) }}
               </td>
               <td style="font-weight: 500">{{ apt.owner_name || '---' }}</td>
               <td>
@@ -327,7 +329,7 @@ onMounted(() => {
           </div>
 
           <div class="form-group">
-            <label>Giá bán / Giá thuê (VNĐ)</label>
+            <label>Giá thuê (VNĐ/tháng)</label>
             <input
               type="number"
               v-model="form.price"
@@ -348,7 +350,6 @@ onMounted(() => {
             <select v-model="form.status">
               <option value="chua_ban">Còn trống</option>
               <option value="dat_coc">Đã đặt cọc</option>
-              <option value="da_ban">Đã bán</option>
               <option value="cho_thue">Đang cho thuê</option>
             </select>
           </div>

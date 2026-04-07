@@ -28,7 +28,6 @@ const printBillData = ref(null);
 const formatAptStatus = (status) => {
   const map = {
     chua_ban: 'Trống',
-    da_ban: 'Đã bán',
     dat_coc: 'Đã cọc',
     cho_thue: 'Cho thuê',
   };
@@ -54,6 +53,22 @@ const form = ref({
   elec_new: 0,
   water_new: 0,
 });
+
+// Định nghĩa đơn giá (Bạn có thể lấy từ .env hoặc DB)
+const UNIT_PRICES = {
+  electricity: 3500, // VNĐ/kWh
+  water: 15000       // VNĐ/m3
+};
+
+const handleCalculateTotal = () => {
+  // 1. Tính tiền điện, nước dựa trên chỉ số mới và cũ
+  const electricityCost = (form.elec_new - form.elec_old) * UNIT_PRICES.electricity;
+  const waterCost = (form.water_new - form.water_old) * UNIT_PRICES.water;
+  
+  // 2. Tổng tiền = Tiền thuê + Phí dịch vụ + Điện + Nước
+  // Lưu ý: rent_amount và service_fee nên được lấy tự động khi chọn căn hộ
+  form.total_amount = form.rent_amount + form.service_fee + electricityCost + waterCost;
+};
 
 // --- LOGIC FETCH DATA ---
 const fetchBills = async () => {

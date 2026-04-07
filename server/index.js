@@ -158,8 +158,15 @@ app.get('/api/apartments', (req, res) => {
 });
 
 app.post('/api/apartments', (req, res) => {
-  const { apartment_code, floor, area, status, owner_name, image, price } =
-    req.body;
+  const {
+    apartment_code,
+    floor,
+    area,
+    status,
+    owner_name,
+    image,
+    rental_price,
+  } = req.body;
   const code =
     apartment_code || `CH${floor}${Math.floor(Math.random() * 90 + 10)}`;
 
@@ -167,7 +174,7 @@ app.post('/api/apartments', (req, res) => {
   const safeImage = image || '';
 
   const sql =
-    'INSERT INTO apartments (apartment_code, floor, area, status, owner_name, image, price) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    'INSERT INTO apartments (apartment_code, floor, area, status, owner_name, image, rental_price) VALUES (?, ?, ?, ?, ?, ?, ?)';
   db.query(
     sql,
     [code, floor, area, status, owner_name, safeImage, safePrice],
@@ -179,14 +186,20 @@ app.post('/api/apartments', (req, res) => {
 });
 
 app.put('/api/apartments/:id', (req, res) => {
-  const { floor, area, status, owner_name, image, price } = req.body;
+  const { floor, area, status, owner_name, image } = req.body;
+  const price = req.body.price || req.body.rental_price || 0;
+
   const sql =
-    'UPDATE apartments SET floor=?, area=?, status=?, owner_name=?, image=?, price=? WHERE id=?';
+    'UPDATE apartments SET floor=?, area=?, status=?, owner_name=?, image=?, rental_price=? WHERE id=?';
+
   db.query(
     sql,
     [floor, area, status, owner_name, image || '', price || 0, req.params.id],
     (err) => {
-      if (err) return res.status(500).json(err);
+      if (err) {
+        console.error('❌ Lỗi DB:', err); // Thêm dòng này để hiện lỗi ra terminal sau này
+        return res.status(500).json(err);
+      }
       res.json({ message: 'Cập nhật thành công' });
     },
   );
