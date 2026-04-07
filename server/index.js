@@ -29,6 +29,7 @@ const dbConfig = {
   database: 'quan_ly_chung_cu',
   port: process.env.DB_PORT || 3306,
   charset: 'utf8mb4',
+  ssl: {},
 };
 
 // Bật SSL nếu kết nối Cloud
@@ -993,9 +994,11 @@ app.put('/api/bills/reject/:id', (req, res) => {
 });
 
 // KHỞI CHẠY SERVER
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server đang chạy tại http://localhost:${PORT}`);
+const PORT = process.env.PORT || 5000;
+// Thêm '0.0.0.0' để cho phép kết nối từ bên ngoài thay vì chỉ nội bộ (localhost)
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server đang chạy tại cổng: ${PORT}`);
+  console.log(`🔗 Truy cập qua IP: http://103.82.195.119:${PORT}`);
 });
 
 // --- API AI ĐỀ XUẤT (GEMINI) ---

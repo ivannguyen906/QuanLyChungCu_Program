@@ -1,32 +1,38 @@
-const mysql = require('mysql');
+const mysql = require('mysql2'); // Chuyển sang dùng mysql2
 require('dotenv').config();
 
-// Sử dụng createPool để duy trì kết nối liên tục
 const db = mysql.createPool({
-  connectionLimit: 10, // Số lượng kết nối tối đa được giữ trong hàng đợi
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: 'quan_ly_chung_cu',
-  port: process.env.DB_PORT || 4000,
-  charset: 'utf8mb4',
+  connectionLimit: 10,
+  host: process.env.CB_HOST, // Đảm bảo khớp với biến trong file .env của bạn
+  user: process.env.CB_USER,
+  password: process.env.CB_PASSWORD,
+  database: process.env.CB_NAME || 'quan_ly_chung_cu',
+  port: process.env.CB_PORT || 4000,
   ssl: {
     minVersion: 'TLSv1.2',
-    rejectUnauthorized: true,
+    rejectUnauthorized: true, // TiDB Cloud yêu cầu SSL để bảo mật
   },
-  // Thêm các thuộc tính giúp tự động kiểm tra và kết nối lại
-  acquireTimeout: 10000, // Thời gian chờ kết nối (10s)
-  waitForConnections: true, // Chờ đến khi có kết nối trống
+  waitForConnections: true,
+  queueLimit: 0,
+  enableKeepAlive: true, // Giúp duy trì kết nối không bị TiDB ngắt
+  keepAliveInitialDelay: 10000,
 });
 
-// Kiểm tra kết nối ban đầu
+// Sử dụng bản Promise để dùng được async/await trong các file route
+const poolPromise = db.promise();
+
+// Kiểm tra kết nối
 db.getConnection((err, connection) => {
   if (err) {
     console.error('❌ Kết nối Database thất bại:', err.message);
-    return;
+    // Log thêm thông tin để debug nếu cần
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+      console.error('Lỗi: Kết nối bị mất (Connection Lost).');
+    }
+  } else {
+    console.log('✅ Đã kết nối thành công tới Pool Database TiDB!');
+    connection.release();
   }
-  console.log('✅ Đã kết nối thành công tới Pool Database: quan_ly_chung_cu');
-  connection.release(); // Giải phóng kết nối sau khi kiểm tra xong
 });
 
-module.exports = db;
+module.exports = poolPromise;
