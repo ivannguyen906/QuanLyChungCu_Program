@@ -50,24 +50,67 @@ const form = ref({
   apartment_id: '',
   month: new Date().getMonth() + 1,
   year: new Date().getFullYear(),
-  elec_new: 0,
-  water_new: 0,
+  elec_old: 0, // Số điện cũ (lấy từ hóa đơn gần nhất)
+  elec_new: 0, // Số điện mới nhập
+  water_old: 0, // Số nước cũ
+  water_new: 0, // Số nước mới nhập
+  rent_amount: 0, // Tiền thuê nhà (lấy từ bảng apartments)
+  service_fee: 0, // Phí dịch vụ
+  total_amount: 0,
 });
+
+const onApartmentChange = async () => {
+  // Tìm căn hộ được chọn trong danh sách apartments
+  const selectedApt = apartments.value.find(
+    (a) => a.id === form.value.apartment_id,
+  );
+
+  if (selectedApt) {
+    console.log('Dữ liệu căn hộ đang chọn:', selectedApt);
+    // ĐỔI .price THÀNH .rental_price
+    form.value.rent_amount = Number(selectedApt.rental_price) || 0;
+
+    // Tính Phí quản lý: Diện tích * 7.000đ
+    form.value.service_fee = (Number(selectedApt.area) || 0) * 7000;
+
+    try {
+      const res = await axios.get(
+        `http://localhost:3000/api/bills/latest/${form.value.apartment_id}`,
+      );
+      if (res.data) {
+        form.value.elec_old = Number(res.data.elec_new) || 0;
+        form.value.water_old = Number(res.data.water_new) || 0;
+      }
+    } catch (e) {
+      form.value.elec_old = 0;
+      form.value.water_old = 0;
+    }
+
+    handleCalculateTotal();
+  }
+};
 
 // Định nghĩa đơn giá (Bạn có thể lấy từ .env hoặc DB)
 const UNIT_PRICES = {
   electricity: 3500, // VNĐ/kWh
-  water: 15000       // VNĐ/m3
+  water: 15000, // VNĐ/m3
 };
 
 const handleCalculateTotal = () => {
-  // 1. Tính tiền điện, nước dựa trên chỉ số mới và cũ
-  const electricityCost = (form.elec_new - form.elec_old) * UNIT_PRICES.electricity;
-  const waterCost = (form.water_new - form.water_old) * UNIT_PRICES.water;
-  
-  // 2. Tổng tiền = Tiền thuê + Phí dịch vụ + Điện + Nước
-  // Lưu ý: rent_amount và service_fee nên được lấy tự động khi chọn căn hộ
-  form.total_amount = form.rent_amount + form.service_fee + electricityCost + waterCost;
+  const electricityUsed = Math.max(
+    0,
+    form.value.elec_new - form.value.elec_old,
+  );
+  const waterUsed = Math.max(0, form.value.water_new - form.value.water_old);
+
+  const electricityCost = electricityUsed * UNIT_PRICES.electricity;
+  const waterCost = waterUsed * UNIT_PRICES.water;
+
+  form.value.total_amount =
+    Number(form.value.rent_amount) +
+    Number(form.value.service_fee) +
+    electricityCost +
+    waterCost;
 };
 
 // --- LOGIC FETCH DATA ---
@@ -378,10 +421,13 @@ onMounted(() => {
 
           <div class="form-group">
             <label>Căn hộ</label>
-            <select v-model="form.apartment_id" class="input-field">
+            <select
+              v-model="form.apartment_id"
+              class="input-field"
+              @change="onApartmentChange"
+            >
               <option value="">-- Chọn căn hộ --</option>
-
-              <option v-for="a in apartments" :value="a.id">
+              <option v-for="a in apartments" :key="a.id" :value="a.id">
                 {{ a.apartment_code }} ({{ formatAptStatus(a.status) }})
               </option>
             </select>
@@ -394,6 +440,7 @@ onMounted(() => {
                 type="number"
                 v-model="form.elec_new"
                 class="input-field"
+                @input="handleCalculateTotal"
               />
             </div>
             <div class="half">
@@ -402,8 +449,29 @@ onMounted(() => {
                 type="number"
                 v-model="form.water_new"
                 class="input-field"
+                @input="handleCalculateTotal"
               />
             </div>
+          </div>
+
+          <div
+            class="form-group"
+            style="
+              margin-top: 10px;
+              padding: 10px;
+              background: #fffbeb;
+              border-radius: 8px;
+              border: 1px solid #fde68a;
+            "
+          >
+            <p style="margin: 0; color: #92400e; font-weight: bold">
+              Dự kiến tổng:
+              {{ form.total_amount ? formatMoney(form.total_amount) : '0 đ' }}
+            </p>
+            <small style="font-size: 10px; color: #b45309">
+              (Bao gồm: Thuê {{ formatMoney(form.rent_amount || 0) }} + Phí Quản
+              lý {{ formatMoney(form.service_fee || 0) }})
+            </small>
           </div>
         </div>
         <div class="modal-footer">
