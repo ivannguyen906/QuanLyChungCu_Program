@@ -7,7 +7,9 @@ const searchQuery = ref('');
 
 const fetchServices = async () => {
   try {
-    const res = await axios.get('http://localhost:3000/api/services');
+    const res = await axios.get(
+      'http://http://103.82.195.119:5000/api/services',
+    );
     services.value = res.data;
   } catch (e) {}
 };

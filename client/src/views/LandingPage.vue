@@ -31,7 +31,9 @@ const formatStatus = (s) =>
 // Lấy danh sách căn hộ từ API
 const fetchApartments = async () => {
   try {
-    const res = await axios.get('http://localhost:3000/api/apartments');
+    const res = await axios.get(
+      'http://http://103.82.195.119:5000/api/apartments',
+    );
     apartments.value = res.data;
   } catch (e) {
     console.error(e);
@@ -45,7 +47,7 @@ const submitForm = async () => {
   isSubmitting.value = true;
   try {
     await axios.post(
-      'http://localhost:3000/api/guest/register',
+      'http://http://103.82.195.119:5000/api/guest/register',
       guestForm.value,
     );
     alert('Đăng ký thành công! Chuyên viên sẽ liên hệ lại ngay.');

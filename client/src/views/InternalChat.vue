@@ -13,7 +13,9 @@ let interval;
 // Lấy tin nhắn
 const fetchMessages = async () => {
   try {
-    const res = await axios.get('http://localhost:3000/api/internal-chat');
+    const res = await axios.get(
+      'http://http://103.82.195.119:5000/api/internal-chat',
+    );
     // Chỉ cuộn xuống nếu đang ở dưới cùng hoặc mới vào (logic đơn giản là cứ load xong thì cuộn nếu cần)
     const shouldScroll = messages.value.length !== res.data.length;
     messages.value = res.data;
@@ -25,7 +27,7 @@ const fetchMessages = async () => {
 const sendMessage = async () => {
   if (!newMessage.value.trim()) return;
   try {
-    await axios.post('http://localhost:3000/api/internal-chat', {
+    await axios.post('http://http://103.82.195.119:5000/api/internal-chat', {
       sender_id: user.value.id,
       content: newMessage.value,
     });

@@ -75,7 +75,7 @@ const onApartmentChange = async () => {
 
     try {
       const res = await axios.get(
-        `http://localhost:3000/api/bills/latest/${form.value.apartment_id}`,
+        `http://http://103.82.195.119:5000/api/bills/latest/${form.value.apartment_id}`,
       );
       if (res.data) {
         form.value.elec_old = Number(res.data.elec_new) || 0;
@@ -116,7 +116,7 @@ const handleCalculateTotal = () => {
 // --- LOGIC FETCH DATA ---
 const fetchBills = async () => {
   try {
-    const res = await axios.get('http://localhost:3000/api/bills');
+    const res = await axios.get('http://http://103.82.195.119:5000/api/bills');
     // Sắp xếp: Pending (Chờ duyệt) lên đầu -> Unpaid -> Paid
     bills.value = res.data.sort((a, b) => {
       const order = { pending: 1, unpaid: 2, paid: 3 };
@@ -126,13 +126,17 @@ const fetchBills = async () => {
 };
 const fetchApartments = async () => {
   try {
-    const res = await axios.get('http://localhost:3000/api/apartments');
+    const res = await axios.get(
+      'http://http://103.82.195.119:5000/api/apartments',
+    );
     apartments.value = res.data;
   } catch (e) {}
 };
 const fetchPaymentSettings = async () => {
   try {
-    const res = await axios.get('http://localhost:3000/api/payment-settings');
+    const res = await axios.get(
+      'http://http://103.82.195.119:5000/api/payment-settings',
+    );
     if (res.data.id) paymentInfo.value = res.data;
   } catch (e) {}
 };
@@ -141,7 +145,7 @@ const fetchPaymentSettings = async () => {
 const handleCreate = async () => {
   try {
     if (!form.value.apartment_id) return alert('Chọn căn hộ!');
-    await axios.post('http://localhost:3000/api/bills', form.value);
+    await axios.post('http://http://103.82.195.119:5000/api/bills', form.value);
     showCreateModal.value = false;
     fetchBills();
     alert('Lập hóa đơn thành công!');
@@ -151,7 +155,7 @@ const handleCreate = async () => {
 };
 const handleSaveBank = async () => {
   await axios.post(
-    'http://localhost:3000/api/payment-settings',
+    'http://http://103.82.195.119:5000/api/payment-settings',
     paymentInfo.value,
   );
   showBankModal.value = false;
@@ -159,13 +163,15 @@ const handleSaveBank = async () => {
 };
 const handlePay = async (bill) => {
   if (bill.status !== 'paid' && confirm('Xác nhận thu tiền mặt trực tiếp?')) {
-    await axios.put(`http://localhost:3000/api/bills/${bill.id}/pay`);
+    await axios.put(
+      `http://http://103.82.195.119:5000/api/bills/${bill.id}/pay`,
+    );
     fetchBills();
   }
 };
 const handleDelete = async (id) => {
   if (confirm('Xóa hóa đơn này?')) {
-    await axios.delete(`http://localhost:3000/api/bills/${id}`);
+    await axios.delete(`http://http://103.82.195.119:5000/api/bills/${id}`);
     fetchBills();
   }
 };
@@ -180,7 +186,7 @@ const approveBill = async () => {
   if (!confirm('Xác nhận tiền đã về tài khoản?')) return;
   try {
     await axios.put(
-      `http://localhost:3000/api/bills/approve/${currentBillApprove.value.id}`,
+      `http://http://103.82.195.119:5000/api/bills/approve/${currentBillApprove.value.id}`,
     );
     alert('Đã duyệt thành công!');
     showApproveModal.value = false;
@@ -194,7 +200,7 @@ const rejectBill = async () => {
   if (!confirm('Từ chối biên lai này?')) return;
   try {
     await axios.put(
-      `http://localhost:3000/api/bills/reject/${currentBillApprove.value.id}`,
+      `http://http://103.82.195.119:5000/api/bills/reject/${currentBillApprove.value.id}`,
     );
     alert('Đã từ chối!');
     showApproveModal.value = false;
@@ -579,7 +585,7 @@ onMounted(() => {
           <div class="proof-container">
             <img
               v-if="currentBillApprove?.payment_image"
-              :src="`http://localhost:3000/uploads/${currentBillApprove?.payment_image}`"
+              :src="`http://http://103.82.195.119:5000/uploads/${currentBillApprove?.payment_image}`"
               alt="Biên lai chuyển khoản"
             />
             <p v-else style="padding: 20px; text-align: center; color: #94a3b8">

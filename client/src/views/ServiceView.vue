@@ -16,7 +16,9 @@ const form = ref({ name: '', price: 0, unit: '' });
 // --- LOGIC FETCH DATA (GIỮ NGUYÊN) ---
 const fetchServices = async () => {
   try {
-    const res = await axios.get('http://localhost:3000/api/services');
+    const res = await axios.get(
+      'http://http://103.82.195.119:5000/api/services',
+    );
     services.value = res.data;
   } catch (e) {}
 };
@@ -32,10 +34,14 @@ const handleSave = async () => {
   try {
     if (isEditing.value)
       await axios.put(
-        `http://localhost:3000/api/services/${currentId.value}`,
+        `http://http://103.82.195.119:5000/api/services/${currentId.value}`,
         form.value,
       );
-    else await axios.post('http://localhost:3000/api/services', form.value);
+    else
+      await axios.post(
+        'http://http://103.82.195.119:5000/api/services',
+        form.value,
+      );
 
     showModal.value = false;
     fetchServices();
@@ -47,7 +53,9 @@ const handleSave = async () => {
 const handleDelete = async (id, name) => {
   if (confirm(`Xóa dịch vụ ${name}?`)) {
     try {
-      await axios.delete(`http://localhost:3000/api/services/${id}`);
+      await axios.delete(
+        `http://http://103.82.195.119:5000/api/services/${id}`,
+      );
       fetchServices();
     } catch (e) {
       alert(e.response?.data?.message);

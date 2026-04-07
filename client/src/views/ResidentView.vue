@@ -29,8 +29,8 @@ const form = ref({
 const fetchData = async () => {
   try {
     const [resRes, resApt] = await Promise.all([
-      axios.get('http://localhost:3000/api/residents'),
-      axios.get('http://localhost:3000/api/apartments'),
+      axios.get('http://http://103.82.195.119:5000/api/residents'),
+      axios.get('http://http://103.82.195.119:5000/api/apartments'),
     ]);
     residents.value = resRes.data;
     apartments.value = resApt.data;
@@ -93,10 +93,14 @@ const handleSave = async () => {
   try {
     if (isEditing.value)
       await axios.put(
-        `http://localhost:3000/api/residents/${currentId.value}`,
+        `http://http://103.82.195.119:5000/api/residents/${currentId.value}`,
         form.value,
       );
-    else await axios.post('http://localhost:3000/api/residents', form.value);
+    else
+      await axios.post(
+        'http://http://103.82.195.119:5000/api/residents',
+        form.value,
+      );
 
     showModal.value = false;
     fetchData();
@@ -108,7 +112,7 @@ const handleSave = async () => {
 
 const handleDelete = async (id) => {
   if (confirm('Bạn có chắc chắn muốn xóa cư dân này?')) {
-    await axios.delete(`http://localhost:3000/api/residents/${id}`);
+    await axios.delete(`http://http://103.82.195.119:5000/api/residents/${id}`);
     fetchData();
   }
 };

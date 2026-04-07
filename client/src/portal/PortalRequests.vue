@@ -14,7 +14,7 @@ const fetchRequests = async () => {
     // Gọi API lấy danh sách yêu cầu của chính cư dân này
     // Lưu ý: Server cần có API này (xem ghi chú bên dưới)
     const res = await axios.get(
-      `http://localhost:3000/api/my-requests/${user.value.id}`,
+      `http://http://103.82.195.119:5000/api/my-requests/${user.value.id}`,
     );
     requests.value = res.data;
   } catch (e) {
@@ -28,7 +28,7 @@ const handleSubmit = async () => {
     return alert('Vui lòng nhập đủ thông tin');
 
   try {
-    await axios.post('http://localhost:3000/api/requests', {
+    await axios.post('http://http://103.82.195.119:5000/api/requests', {
       resident_id: user.value.id,
       apartment_id: user.value.apartment_id, // Gửi kèm ID căn hộ
       title: form.value.title,

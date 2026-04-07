@@ -21,7 +21,9 @@ let timerInterval = null;
 
 const fetchStats = async () => {
   try {
-    const res = await axios.get('http://localhost:3000/api/dashboard/stats');
+    const res = await axios.get(
+      'http://http://103.82.195.119:5000/api/dashboard/stats',
+    );
     stats.value = res.data.data;
   } catch (e) {
     console.error(e);

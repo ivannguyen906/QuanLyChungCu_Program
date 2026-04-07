@@ -13,7 +13,9 @@ const form = ref({ title: '', content: '' });
 // --- LOGIC FETCH DATA (GIỮ NGUYÊN) ---
 const fetchAnnouncements = async () => {
   try {
-    const res = await axios.get('http://localhost:3000/api/announcements');
+    const res = await axios.get(
+      'http://http://103.82.195.119:5000/api/announcements',
+    );
     announcements.value = res.data;
   } catch (e) {}
 };
@@ -25,7 +27,10 @@ const handleSend = async () => {
   if (!confirm('Tin này sẽ được gửi đến TẤT CẢ cư dân. Xác nhận gửi?')) return;
 
   try {
-    await axios.post('http://localhost:3000/api/announcements', form.value);
+    await axios.post(
+      'http://http://103.82.195.119:5000/api/announcements',
+      form.value,
+    );
     alert('Đã gửi thành công!');
     form.value = { title: '', content: '' };
     fetchAnnouncements();
@@ -37,7 +42,9 @@ const handleSend = async () => {
 // Xóa (Chỉ Admin)
 const handleDelete = async (id) => {
   if (confirm('Xóa tin này khỏi lịch sử?')) {
-    await axios.delete(`http://localhost:3000/api/announcements/${id}`);
+    await axios.delete(
+      `http://http://103.82.195.119:5000/api/announcements/${id}`,
+    );
     fetchAnnouncements();
   }
 };

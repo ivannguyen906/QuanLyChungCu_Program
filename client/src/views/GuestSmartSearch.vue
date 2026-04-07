@@ -59,7 +59,7 @@ const handleSmartSearch = async () => {
 
   try {
     const res = await axios.post(
-      'http://localhost:3000/api/ai-recommend',
+      'http://http://103.82.195.119:5000/api/ai-recommend',
       form.value,
     );
     results.value = res.data;

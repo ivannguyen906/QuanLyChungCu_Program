@@ -15,7 +15,7 @@ const fetchNoti = async () => {
     if (!props.userId) return;
     const type = props.role === 'resident' ? 'resident' : 'user';
     const res = await axios.get(
-      `http://localhost:3000/api/notifications?type=${type}&id=${props.userId}`,
+      `http://http://103.82.195.119:5000/api/notifications?type=${type}&id=${props.userId}`,
     );
 
     // Logic hiện Popup khi có tin mới chưa đọc
@@ -41,7 +41,7 @@ const markRead = async () => {
   showDropdown.value = !showDropdown.value;
   if (showDropdown.value && unreadCount.value > 0) {
     const type = props.role === 'resident' ? 'resident' : 'user';
-    await axios.put('http://localhost:3000/api/notifications/read', {
+    await axios.put('http://103.82.195.119:5000/api/notifications/read', {
       type,
       id: props.userId,
     });

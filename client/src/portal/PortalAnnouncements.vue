@@ -9,7 +9,7 @@ const showModal = ref(false);
 // --- FETCH DATA ---
 const fetchData = async () => {
   try {
-    const res = await axios.get('http://localhost:3000/api/announcements');
+    const res = await axios.get('http://103.82.195.119:5000/api/announcements');
     // Sắp xếp mới nhất lên đầu
     announcements.value = res.data.sort(
       (a, b) => new Date(b.created_at) - new Date(a.created_at),

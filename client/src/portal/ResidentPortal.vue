@@ -45,7 +45,7 @@ const handleChangePassword = async () => {
   }
 
   try {
-    await axios.post('http://localhost:3000/api/change-password', {
+    await axios.post('http://http://103.82.195.119:5000/api/change-password', {
       id: user.value.id,
       oldPassword: passForm.value.oldPassword,
       newPassword: passForm.value.newPassword,

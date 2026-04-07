@@ -32,8 +32,8 @@ const currentAptCode = ref('');
 const fetchData = async () => {
   try {
     const [resApt, resRes] = await Promise.all([
-      axios.get('http://localhost:3000/api/apartments'),
-      axios.get('http://localhost:3000/api/residents'),
+      axios.get('http://http://103.82.195.119:5000/api/apartments'),
+      axios.get('http://http://103.82.195.119:5000/api/residents'),
     ]);
     apartments.value = resApt.data;
     residents.value = resRes.data;
@@ -105,10 +105,14 @@ const handleSave = async () => {
 
     if (isEditing.value)
       await axios.put(
-        `http://localhost:3000/api/apartments/${currentId.value}`,
+        `http://http://103.82.195.119:5000/api/apartments/${currentId.value}`,
         form.value,
       );
-    else await axios.post('http://localhost:3000/api/apartments', form.value);
+    else
+      await axios.post(
+        'http://http://103.82.195.119:5000/api/apartments',
+        form.value,
+      );
 
     showModal.value = false;
     fetchData(); // Load lại bảng ngay lập tức
@@ -119,7 +123,9 @@ const handleSave = async () => {
 
 const handleDelete = async (id, code) => {
   if (confirm('Bạn có chắc chắn muốn xóa căn hộ này không?')) {
-    await axios.delete(`http://localhost:3000/api/apartments/${id}`);
+    await axios.delete(
+      `http://http://103.82.195.119:5000/api/apartments/${id}`,
+    );
     fetchData();
   }
 };
@@ -130,7 +136,7 @@ const openServiceConfig = async (apt) => {
   currentAptCode.value = apt.apartment_code;
   try {
     const res = await axios.get(
-      `http://localhost:3000/api/apartments/${apt.id}/services`,
+      `http://http://103.82.195.119:5000/api/apartments/${apt.id}/services`,
     );
     svcForm.value = res.data;
     showSvcModal.value = true;
@@ -142,7 +148,7 @@ const openServiceConfig = async (apt) => {
 const handleSaveServices = async () => {
   try {
     await axios.post(
-      `http://localhost:3000/api/apartments/${currentId.value}/services`,
+      `http://http://103.82.195.119:5000/api/apartments/${currentId.value}/services`,
       svcForm.value,
     );
     showSvcModal.value = false;
