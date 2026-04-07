@@ -11,13 +11,13 @@ const fetchDashboardData = async () => {
   if (!user.value.id) return;
   try {
     const resBill = await axios.get(
-      `http://http://103.82.195.119:5000/api/my-bills/${user.value.apartment_id}`,
+      `http://103.82.195.119:5000/api/my-bills/${user.value.apartment_id}`,
     );
     unpaidCount.value = resBill.data.filter(
       (b) => b.status === 'unpaid',
     ).length;
     const resNoti = await axios.get(
-      'http://http://103.82.195.119:5000/api/announcements',
+      'http://103.82.195.119:5000/api/announcements',
     );
     newNotiCount.value = resNoti.data.length > 0 ? 3 : 0;
   } catch (e) {}

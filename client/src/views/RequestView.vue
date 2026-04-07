@@ -16,7 +16,7 @@ const form = ref({ status: '', admin_response: '' });
 const fetchRequests = async () => {
   try {
     const res = await axios.get(
-      'http://http://103.82.195.119:5000/api/admin/requests',
+      'http://103.82.195.119:5000/api/admin/requests',
     );
     requests.value = res.data;
   } catch (e) {}
@@ -31,7 +31,7 @@ const openProcess = (req) => {
 const handleUpdate = async () => {
   try {
     await axios.put(
-      `http://http://103.82.195.119:5000/api/requests/${currentReq.value.id}`,
+      `http://103.82.195.119:5000/api/requests/${currentReq.value.id}`,
       form.value,
     );
     showModal.value = false;
@@ -44,7 +44,7 @@ const handleUpdate = async () => {
 
 const handleDelete = async (id) => {
   if (confirm('Xóa?')) {
-    await axios.delete(`http://http://103.82.195.119:5000/api/requests/${id}`);
+    await axios.delete(`http://103.82.195.119:5000/api/requests/${id}`);
     fetchRequests();
   }
 };

@@ -12,13 +12,13 @@ const fetchData = async () => {
   try {
     // 1. Lấy thông tin căn hộ
     const resApt = await axios.get(
-      `http://http://103.82.195.119:5000/api/apartments/${user.value.apartment_id}`,
+      `http://103.82.195.119:5000/api/apartments/${user.value.apartment_id}`,
     );
     apartment.value = resApt.data;
 
     // 2. Lấy danh sách thành viên
     const resMem = await axios.get(
-      `http://http://103.82.195.119:5000/api/apartments/${user.value.apartment_id}/members`,
+      `http://103.82.195.119:5000/api/apartments/${user.value.apartment_id}/members`,
     );
     members.value = resMem.data;
   } catch (e) {

@@ -20,13 +20,10 @@ const handleLogin = async () => {
 
   isLoading.value = true;
   try {
-    const res = await axios.post(
-      'http://http://103.82.195.119:5000/api/login',
-      {
-        username: username.value,
-        password: password.value,
-      },
-    );
+    const res = await axios.post('http://103.82.195.119:5000/api/login', {
+      username: username.value,
+      password: password.value,
+    });
 
     localStorage.setItem('user_info', JSON.stringify(res.data));
 
@@ -53,7 +50,7 @@ const handleForgotPassword = async () => {
   forgotLoading.value = true;
   try {
     const res = await axios.post(
-      'http://http://103.82.195.119:5000/api/forgot-password',
+      'http://103.82.195.119:5000/api/forgot-password',
       forgotForm.value,
     );
     alert(res.data.message);

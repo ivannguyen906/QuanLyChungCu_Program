@@ -16,11 +16,11 @@ const fetchData = async () => {
   if (!user.value.apartment_id) return;
   try {
     const resBills = await axios.get(
-      `http://http://103.82.195.119:5000/api/my-bills/${user.value.apartment_id}`,
+      `http://103.82.195.119:5000/api/my-bills/${user.value.apartment_id}`,
     );
     bills.value = resBills.data;
     const resBank = await axios.get(
-      'http://http://103.82.195.119:5000/api/payment-settings',
+      'http://103.82.195.119:5000/api/payment-settings',
     );
     paymentInfo.value = resBank.data;
   } catch (e) {
@@ -64,13 +64,9 @@ const handleFileUpload = async (event) => {
   formData.append('bill_id', selectedBill.value.id);
 
   try {
-    await axios.post(
-      'http://http://103.82.195.119:5000/api/bills/upload',
-      formData,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      },
-    );
+    await axios.post('http://103.82.195.119:5000/api/bills/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
     alert('Đã gửi biên lai! Vui lòng chờ BQL xác nhận.');
     showQRModal.value = false;
     fetchData(); // Load lại danh sách để cập nhật trạng thái

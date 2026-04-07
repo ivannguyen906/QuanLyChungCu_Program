@@ -16,9 +16,7 @@ let intervalId = null;
 
 const fetchChat = async () => {
   try {
-    const res = await axios.get(
-      'http://http://103.82.195.119:5000/api/internal-chat',
-    );
+    const res = await axios.get('http://103.82.195.119:5000/api/internal-chat');
     // Chỉ cuộn xuống nếu có tin nhắn mới
     if (res.data.length !== messages.value.length) {
       messages.value = res.data;
@@ -32,7 +30,7 @@ const fetchChat = async () => {
 const sendMessage = async () => {
   if (!newMessage.value.trim()) return;
   try {
-    await axios.post('http://http://103.82.195.119:5000/api/internal-chat', {
+    await axios.post('http://103.82.195.119:5000/api/internal-chat', {
       sender_id: user.value.id,
       content: newMessage.value,
     });
@@ -47,7 +45,7 @@ const deleteMessage = async (msg) => {
   if (!confirm('Bạn muốn thu hồi tin nhắn này?')) return;
   try {
     await axios.delete(
-      `http://http://103.82.195.119:5000/api/internal-chat/${msg.id}`,
+      `http://103.82.195.119:5000/api/internal-chat/${msg.id}`,
     );
     messages.value = messages.value.filter((m) => m.id !== msg.id);
   } catch (e) {

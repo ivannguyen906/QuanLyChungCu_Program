@@ -15,7 +15,7 @@ const fetchNoti = async () => {
     if (!props.userId) return;
     const type = props.role === 'resident' ? 'resident' : 'user';
     const res = await axios.get(
-      `http://http://103.82.195.119:5000/api/notifications?type=${type}&id=${props.userId}`,
+      `http://103.82.195.119:5000/api/notifications?type=${type}&id=${props.userId}`,
     );
 
     // Logic hiện Popup khi có tin mới chưa đọc

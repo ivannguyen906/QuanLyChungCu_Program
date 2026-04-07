@@ -22,7 +22,7 @@ let timerInterval = null;
 const fetchStats = async () => {
   try {
     const res = await axios.get(
-      'http://http://103.82.195.119:5000/api/dashboard/stats',
+      'http://103.82.195.119:5000/api/dashboard/stats',
     );
     stats.value = res.data.data;
   } catch (e) {

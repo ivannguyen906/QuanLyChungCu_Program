@@ -14,9 +14,7 @@ const stats = ref({ new: 0, contacted: 0 });
 
 const fetchLeads = async () => {
   try {
-    const res = await axios.get(
-      'http://http://103.82.195.119:5000/api/guest/leads',
-    );
+    const res = await axios.get('http://103.82.195.119:5000/api/guest/leads');
     leads.value = res.data;
     // Tính thống kê
     stats.value.new = leads.value.filter((l) => l.status === 'new').length;
@@ -28,12 +26,9 @@ const fetchLeads = async () => {
 
 const updateStatus = async (lead, newStatus) => {
   try {
-    await axios.put(
-      `http://http://103.82.195.119:5000/api/guest/leads/${lead.id}`,
-      {
-        status: newStatus,
-      },
-    );
+    await axios.put(`http://103.82.195.119:5000/api/guest/leads/${lead.id}`, {
+      status: newStatus,
+    });
     lead.status = newStatus;
     fetchLeads(); // Cập nhật lại số liệu
   } catch (e) {
@@ -47,9 +42,7 @@ const formatTime = (t) => new Date(t).toLocaleString('vi-VN');
 const handleDelete = async (id) => {
   if (confirm('Bạn có chắc muốn xóa khách hàng này?')) {
     try {
-      await axios.delete(
-        `http://http://103.82.195.119:5000/api/guest/leads/${id}`,
-      );
+      await axios.delete(`http://103.82.195.119:5000/api/guest/leads/${id}`);
       fetchLeads();
     } catch (e) {
       alert('Lỗi xóa khách hàng');

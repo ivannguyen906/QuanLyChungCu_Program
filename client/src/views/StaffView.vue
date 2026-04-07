@@ -24,7 +24,7 @@ const form = ref({
 // --- LOGIC FETCH DATA ---
 const fetchUsers = async () => {
   try {
-    const res = await axios.get('http://http://103.82.195.119:5000/api/users');
+    const res = await axios.get('http://103.82.195.119:5000/api/users');
     users.value = res.data;
   } catch (e) {
     console.error(e);
@@ -61,16 +61,13 @@ const handleSave = async () => {
     if (isEditing.value) {
       // Update
       await axios.put(
-        `http://http://103.82.195.119:5000/api/users/${currentId.value}`,
+        `http://103.82.195.119:5000/api/users/${currentId.value}`,
         form.value,
       );
     } else {
       // Create
       if (!form.value.password) return alert('Vui lòng nhập mật khẩu!');
-      await axios.post(
-        'http://http://103.82.195.119:5000/api/users',
-        form.value,
-      );
+      await axios.post('http://103.82.195.119:5000/api/users', form.value);
     }
 
     showModal.value = false;
@@ -85,7 +82,7 @@ const handleSave = async () => {
 const handleDelete = async (id) => {
   if (confirm('Bạn có chắc chắn muốn xóa nhân viên này?')) {
     try {
-      await axios.delete(`http://http://103.82.195.119:5000/api/users/${id}`);
+      await axios.delete(`http://103.82.195.119:5000/api/users/${id}`);
       fetchUsers();
     } catch (e) {
       alert('Lỗi xóa');
