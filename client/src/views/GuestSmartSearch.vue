@@ -68,9 +68,8 @@ export default {
           time: this.getCurrentTime(),
         },
       ],
-      // ĐẢM BẢO ĐÂY LÀ PRODUCTION URL TRONG N8N
-      webhookUrl:
-        'https://ducthagcontact9066.app.n8n.cloud/webhook/smart-search',
+      // Gọi theo đường dẫn tương đối để Axios tự ghép baseURL (/api) + /n8n/...
+      webhookUrl: '/n8n/webhook/chat-apartment',
     };
   },
   methods: {
@@ -80,11 +79,23 @@ export default {
         minute: '2-digit',
       });
     },
-    // FIX HIỂN THỊ MARKDOWN VÀ XUỐNG DÒNG
+    // FIX HIỂN THỊ HÌNH ẢNH, MARKDOWN VÀ XUỐNG DÒNG
     formatContent(text) {
       if (!text) return '';
       return text
+        // Chuyển đổi Markdown Image: ![alt](url) -> <img>
+        .replace(
+          /!\[(.*?)\]\((.*?)\)/g,
+          '<img src="$2" alt="$1" style="max-width: 100%; border-radius: 8px; margin-top: 10px; display: block; border: 1px solid rgba(212, 175, 55, 0.3);" />'
+        )
+        // Chuyển đổi Markdown Bold: **text** -> <strong>text</strong>
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        // Chuyển đổi Markdown Link: [text](url) -> <a>
+        .replace(
+          /\[(.*?)\]\((.*?)\)/g,
+          '<a href="$2" target="_blank" style="color: #d4af37; text-decoration: underline;">$1</a>'
+        )
+        // Chuyển đổi xuống dòng
         .replace(/\n/g, '<br/>');
     },
     async handleSend() {
@@ -107,23 +118,32 @@ export default {
           method: 'post',
           url: this.webhookUrl,
           data: {
-            message: userText, // ✅ FIX
+            chatInput: userText, // Đổi từ message thành chatInput để khớp với n8n
           },
           headers: {
             'Content-Type': 'application/json',
           },
         });
 
-        console.log('API RESPONSE:', response.data); // debug
+        console.log('API RESPONSE:', response.data);
 
-        const reply =
-          response.data?.message ||
-          response.data?.data?.message ||
-          'Đã nhận yêu cầu.';
+        // Xử lý dữ liệu trả về linh hoạt hơn
+        let reply = 'Đã nhận yêu cầu.';
+        const resData = Array.isArray(response.data) ? response.data[0] : response.data;
+
+        if (resData) {
+          // Thử tìm nội dung trong các trường phổ biến của n8n
+          reply = resData.output || 
+                  resData.message || 
+                  resData.text || 
+                  resData.response || 
+                  (resData.data && (resData.data.message || resData.data.output)) ||
+                  (typeof resData === 'string' ? resData : reply);
+        }
 
         this.chatHistory.push({
           role: 'assistant',
-          content: reply, // ✅ FIX
+          content: reply,
           time: this.getCurrentTime(),
         });
       } catch (error) {

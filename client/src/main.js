@@ -4,7 +4,8 @@ import router from './router';
 
 import './assets/main.css';
 import axios from 'axios';
-axios.defaults.baseURL = 'http://103.82.195.119:5000/api';
+// Chỉ sử dụng đường dẫn tương đối để Vite Proxy có thể hoạt động
+axios.defaults.baseURL = '/api';
 
 const app = createApp(App);
 app.use(router);
