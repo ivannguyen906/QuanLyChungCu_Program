@@ -20,7 +20,7 @@ const showOwnerSuggestions = ref(false);
 const form = ref({
   floor: 1,
   area: 70,
-  status: 'chua_ban',
+  status: 'con_trong',
   owner_name: '',
   price: 0,
   image: '',
@@ -52,7 +52,7 @@ const formatStatus = (status) => {
     con_trong: 'Còn trống',
     dat_coc: 'Đã đặt cọc',
     cho_thue: 'Đang cho thuê',
-    chua_ban: 'Còn trống',
+    con_trong: 'Còn trống',
   };
   return map[status] || 'Không xác định';
 };
@@ -227,7 +227,7 @@ onMounted(() => {
               form = {
                 floor: 1,
                 area: 70,
-                status: 'chua_ban',
+                status: 'con_trong',
                 owner_name: '',
                 price: 0,
                 image: '',
@@ -349,7 +349,7 @@ onMounted(() => {
           <div class="form-group">
             <label>Trạng thái</label>
             <select v-model="form.status">
-              <option value="chua_ban">Còn trống</option>
+              <option value="con_trong">Còn trống</option>
               <option value="dat_coc">Đã đặt cọc</option>
               <option value="cho_thue">Đang cho thuê</option>
             </select>
@@ -647,7 +647,7 @@ onMounted(() => {
   font-weight: 600;
   display: inline-block;
 }
-.badge.chua_ban {
+.badge.con_trong {
   background: #f1f5f9;
   color: #64748b;
 }

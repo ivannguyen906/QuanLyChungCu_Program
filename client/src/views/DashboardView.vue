@@ -320,12 +320,12 @@ onUnmounted(() => {
             <div class="status-item">
               <div class="st-label">
                 <span>Còn trống</span>
-                <strong>{{ getStatusCount('chua_ban') }} căn</strong>
+                <strong>{{ getStatusCount('con_trong') }} căn</strong>
               </div>
               <div class="progress-bg">
                 <div
                   class="progress-fill empty"
-                  :style="{ width: getStatusPercent('chua_ban') }"
+                  :style="{ width: getStatusPercent('con_trong') }"
                 ></div>
               </div>
             </div>

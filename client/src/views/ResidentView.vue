@@ -39,7 +39,7 @@ const fetchData = async () => {
 
 const formatAptStatus = (status) => {
   const map = {
-    chua_ban: 'Còn trống',
+    con_trong: 'Còn trống',
     dat_coc: 'Đã đặt cọc',
     da_ban: 'Đã bán',
     cho_thue: 'Đang thuê',

@@ -27,7 +27,7 @@ const printBillData = ref(null);
 // Hàm format trạng thái căn hộ
 const formatAptStatus = (status) => {
   const map = {
-    chua_ban: 'Trống',
+    con_trong: 'Trống',
     dat_coc: 'Đã cọc',
     cho_thue: 'Cho thuê',
   };

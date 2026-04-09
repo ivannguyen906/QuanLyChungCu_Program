@@ -30,7 +30,7 @@ const fetchData = async () => {
 const roleText = (isOwner) => (isOwner ? 'Chủ hộ' : 'Thành viên');
 const statusText = (st) => {
   const map = {
-    chua_ban: 'Trống',
+    con_trong: 'Trống',
     da_ban: 'Đã sở hữu',
     cho_thue: 'Đang thuê',
     dat_coc: 'Đang cọc',

@@ -1006,7 +1006,7 @@ app.post('/api/ai-recommend', (req, res) => {
   const { budget, members, preferences } = req.body;
   const maxBudget = Number(budget) * 1.2;
   const sql =
-    "SELECT * FROM apartments WHERE status = 'chua_ban' AND price <= ?";
+    "SELECT * FROM apartments WHERE status = 'con_trong' AND price <= ?";
 
   db.query(sql, [maxBudget], async (err, apartments) => {
     if (err) {

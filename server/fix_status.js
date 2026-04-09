@@ -25,7 +25,7 @@ db.connect((err) => {
 
 // Chuyển cột status sang VARCHAR(50) để chấp nhận mọi trạng thái (dat_coc, cho_thue...)
 const query =
-  "ALTER TABLE apartments MODIFY COLUMN status VARCHAR(50) DEFAULT 'chua_ban'";
+  "ALTER TABLE apartments MODIFY COLUMN status VARCHAR(50) DEFAULT 'con_trong'";
 
 console.log("🛠️ Đang cập nhật Database để hỗ trợ trạng thái 'Đang đặt cọc'...");
 

@@ -22,7 +22,7 @@ const formatMoney = (price) => {
 // Format trạng thái
 const formatStatus = (s) =>
   ({
-    chua_ban: 'Đang mở bán',
+    con_trong: 'Đang mở bán',
     da_ban: 'Đã bán',
     dat_coc: 'Đã cọc',
     cho_thue: 'Cho thuê',
@@ -241,7 +241,7 @@ onMounted(fetchApartments);
               </div>
               <div class="card-footer">
                 <button
-                  v-if="apt.status === 'chua_ban'"
+                  v-if="apt.status === 'con_trong'"
                   @click="
                     guestForm.message = `Tôi quan tâm căn ${apt.apartment_code}`;
                     scrollTo('contact');
